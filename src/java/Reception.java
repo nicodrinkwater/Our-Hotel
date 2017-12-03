@@ -67,6 +67,12 @@ public class Reception extends HttpServlet {
             getDetails(request, response, statement);
             connection.close();
             
+            // makes sure all cookies expire after 30 mins
+            Cookie[] c = request.getCookies();
+            for(int i = 0; i < c.length; i++){
+                c[i].setMaxAge(30 * 60);
+            }
+            
             response.sendRedirect("reception-home.html");
             
         } catch (Exception e) {
@@ -242,5 +248,6 @@ public class Reception extends HttpServlet {
                 response.addCookie(new Cookie("room3", room2));
             }
         }
+        
     }
 }

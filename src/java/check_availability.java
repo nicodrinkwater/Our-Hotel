@@ -62,6 +62,14 @@ public class check_availability extends HttpServlet {
         
         // create the cookies that hold checkin, checkout and room info
         create_Cookies(request, response, statement);
+        
+        // makes sure all cookies expire after 30 mins
+        Cookie[] c = request.getCookies();
+        for(int i = 0; i < c.length; i++){
+            c[i].setMaxAge(30 * 60);
+        }
+        
+        response.sendRedirect("reservation.html");
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -157,9 +165,7 @@ public class check_availability extends HttpServlet {
         response.addCookie(new Cookie("check_out", check_out));
         response.addCookie(new Cookie("cost", Float.toString(cost)));
         response.addCookie(new Cookie("number", Integer.toString(number)));
-        
-              
-        response.sendRedirect("reservation.html");
+       
        
     }
 }

@@ -54,7 +54,6 @@ public class Reception_update extends HttpServlet {
             Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost/postgres", "postgres", "fuck1234");
             
             
-            
             Statement statement = connection.createStatement();
             
             statement.execute("SET SEARCH_PATH TO hotelbooking;");
@@ -64,11 +63,8 @@ public class Reception_update extends HttpServlet {
             
             update_rooms(statement, request);
             update_payment(statement, request);
-           
             
             connection.close();
-            
-            
             
         } catch (Exception e) {
            // TODO
