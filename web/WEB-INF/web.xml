@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="3.1" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
+    <servlet>
+        <servlet-name>check_availability</servlet-name>
+        <servlet-class>check_availability</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>Reception</servlet-name>
+        <servlet-class>Reception</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>Reception_update</servlet-name>
+        <servlet-class>Reception_update</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>check_availability</servlet-name>
+        <url-pattern>/check_availability</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>Complete_Booking</servlet-name>
+        <servlet-class>Complete_Booking</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Complete_Booking</servlet-name>
+        <url-pattern>/Complete_Booking</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Reception</servlet-name>
+        <url-pattern>/Reception</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Reception_update</servlet-name>
+        <url-pattern>/Reception_update</url-pattern>
+    </servlet-mapping>
+    <session-config>
+        <session-timeout>
+            30
+        </session-timeout>
+    </session-config>
+</web-app>
