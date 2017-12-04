@@ -44,10 +44,10 @@ public class Complete_Booking extends HttpServlet {
             String myDBurl = ("jdbc:postgresql://" + cmpHost + "/" + dbName);
             
             /* Uncomment this to connect to uni database .*/
-            //Connection connection = DriverManager.getConnection(myDBurl, dbName, dbPassword);
+            Connection connection = DriverManager.getConnection(myDBurl, dbName, dbPassword);
             
             // connect to database on my laptop
-            Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost/postgres", "postgres", "fuck1234");
+            //Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost/postgres", "postgres", "fuck1234");
             
             
             

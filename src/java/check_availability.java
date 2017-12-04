@@ -42,19 +42,19 @@ public class check_availability extends HttpServlet {
         // these are used to connect to database
         Class.forName("org.postgresql.Driver");
         
-        /*
+        
         String cmpHost = "cmpstudb-02.cmp.uea.ac.uk";
         String dbUsername = "qsb17hdu";
         String dbName = "qsb17hdu";
         String dbPassword = "qsb17hdu";
         String myDBurl = ("jdbc:postgresql://" + cmpHost + "/" + dbName);
-        */
+        
 
         /* Uncomment this to connect to uni database .*/
-        //Connection connection = DriverManager.getConnection(myDBurl, dbName, dbPassword);
+        Connection connection = DriverManager.getConnection(myDBurl, dbName, dbPassword);
 
         // connect to database on my laptop
-        Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost/postgres", "postgres", "fuck1234");
+        //Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost/postgres", "postgres", "fuck1234");
         
         Statement statement = connection.createStatement();
         
