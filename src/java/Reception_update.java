@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -65,12 +61,12 @@ public class Reception_update extends HttpServlet {
             update_payment(statement, request);
             
             connection.close();
-            
+            response.sendRedirect("reception-home.html");
         } catch (Exception e) {
-           // TODO
+            response.sendRedirect("error.html");
         }
         
-        response.sendRedirect("reception-home.html");
+        
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

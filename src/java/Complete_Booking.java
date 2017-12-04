@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -23,11 +18,12 @@ import javax.servlet.http.HttpServletResponse;
 /**
  *
  * @author nicod
+ * this servlet completes the booking. It creates or updates customer on db, creates a booking and a roombooking
+ * and provides a booking reference for the customer.
  */
 @WebServlet(urlPatterns = {"/Complete_Booking"})
 public class Complete_Booking extends HttpServlet {
 
-    
     String name, email, address, cc_type, cc_number, cc_exp, room, check_in, check_out, cost, number_rooms;
     int b_ref, c_no;
    
@@ -50,7 +46,6 @@ public class Complete_Booking extends HttpServlet {
             //Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost/postgres", "postgres", "fuck1234");
             
             
-            
             Statement statement = connection.createStatement();
             
             statement.execute("SET SEARCH_PATH TO hotelbooking;");
@@ -71,7 +66,7 @@ public class Complete_Booking extends HttpServlet {
             response.sendRedirect("booked.html");
             
         } catch (Exception e) {
-           // TODO
+            response.sendRedirect("error.html");
         }
     }
    
@@ -101,7 +96,7 @@ public class Complete_Booking extends HttpServlet {
         return "Puts customer details in database";
     }// </editor-fold>
 
-    // checks if new or not then adds if new
+    // checks if new or not then either updates or adds new customer to database
     private void add_customer_to_db(Statement statement, HttpServletRequest request) throws SQLException {
           
             name = request.getParameter("name");
@@ -148,11 +143,7 @@ public class Complete_Booking extends HttpServlet {
          
   
     }
-    // adds room_book to database
-    private void add_room_book_to_db(Statement statement, HttpServletRequest request) {
-        String bed, room_type, check_in, check_out;
-        int customer_no, cost;   
-    }
+    
     
     // adds booking to database
     private void add_booking_to_db(Statement statement, HttpServletRequest request) {
@@ -182,6 +173,7 @@ public class Complete_Booking extends HttpServlet {
                 while(r.next()){
                     b_ref = Integer.parseInt(r.getString(1)) + 1;   
             }
+            // the sql function 'create_booking' does most of the work here and creates both the booking and roombooking
             statement.execute("SELECT create_booking(" + b_ref + ", " + c_no + ", '" +
                 room + "', '" + check_in + "', '" + check_out + "', " + number_rooms + ", " + cost + ");");
         } catch (SQLException ex) {
@@ -190,7 +182,7 @@ public class Complete_Booking extends HttpServlet {
         }
     }
 
-    // creates the cookies containing info that will be accessed fby the next html page (confimation page)
+    // creates the cookies containing info that will be accessed by the next html page (confimation page)
     private void create_cookies(HttpServletRequest request, HttpServletResponse response) {
         
         response.addCookie(new Cookie("name", name));

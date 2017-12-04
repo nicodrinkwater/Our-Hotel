@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -76,7 +71,7 @@ public class Reception extends HttpServlet {
             response.sendRedirect("reception-home.html");
             
         } catch (Exception e) {
-           // TODO
+            response.sendRedirect("error.html");
         }  
     }
 

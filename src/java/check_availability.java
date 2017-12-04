@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -22,6 +18,8 @@ import javax.servlet.http.HttpServletResponse;
 /**
  *
  * @author nicod
+ * This servlet checks if rooms are available for the dates requested 
+ * From the form on the hotel homepage
  */
 @WebServlet(urlPatterns = {"/check_availability"})
 public class check_availability extends HttpServlet {
@@ -39,37 +37,45 @@ public class check_availability extends HttpServlet {
             throws ServletException, IOException, SQLException, ClassNotFoundException {
         response.setContentType("text/html;charset=UTF-8");
         
-        // these are used to connect to database
-        Class.forName("org.postgresql.Driver");
-        
-        
-        String cmpHost = "cmpstudb-02.cmp.uea.ac.uk";
-        String dbUsername = "qsb17hdu";
-        String dbName = "qsb17hdu";
-        String dbPassword = "qsb17hdu";
-        String myDBurl = ("jdbc:postgresql://" + cmpHost + "/" + dbName);
-        
+        try {
+            // these are used to connect to database
+            Class.forName("org.postgresql.Driver");
 
-        /* Uncomment this to connect to uni database .*/
-        Connection connection = DriverManager.getConnection(myDBurl, dbName, dbPassword);
 
-        // connect to database on my laptop
-        //Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost/postgres", "postgres", "fuck1234");
-        
-        Statement statement = connection.createStatement();
-        
-        statement.executeUpdate("SET SEARCH_PATH TO hotelbooking; ");
-        
-        // create the cookies that hold checkin, checkout and room info
-        create_Cookies(request, response, statement);
-        
-        // makes sure all cookies expire after 30 mins
-        Cookie[] c = request.getCookies();
-        for(int i = 0; i < c.length; i++){
-            c[i].setMaxAge(30 * 60);
+            String cmpHost = "cmpstudb-02.cmp.uea.ac.uk";
+            String dbUsername = "qsb17hdu";
+            String dbName = "qsb17hdu";
+            String dbPassword = "qsb17hdu";
+            String myDBurl = ("jdbc:postgresql://" + cmpHost + "/" + dbName);
+
+
+            /* Uncomment this to connect to uni database .*/
+            Connection connection = DriverManager.getConnection(myDBurl, dbName, dbPassword);
+
+            // connect to database on my laptop
+            //Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost/postgres", "postgres", "fuck1234");
+
+            Statement statement = connection.createStatement();
+
+            statement.executeUpdate("SET SEARCH_PATH TO hotelbooking; ");
+
+            // create the cookies that hold checkin, checkout and room info
+            create_Cookies(request, response, statement);
+
+            // makes sure all cookies expire after 30 mins
+            Cookie[] c = request.getCookies();
+            for(int i = 0; i < c.length; i++){
+                c[i].setMaxAge(30 * 60);
+            }
+            
+            response.sendRedirect("reservation.html");
+        } catch (Exception e){
+            response.sendRedirect("error.html");
         }
         
-        response.sendRedirect("reservation.html");
+  
+        
+       
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
