@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
@@ -20,6 +21,11 @@ import javax.servlet.http.HttpServletResponse;
  */
 // this servlet is for reception to get customer details then go to pager where they can either take payment or update room status.
 public class Reception extends HttpServlet {
+    
+    //this is the next page that will be called if no errors.
+    String next_page = "reception-manage.html";
+    //this is the page that will called if error
+    String error_page = "error.html";
     
     // these are variables that will hold details of booking.
     int number_rooms;
@@ -39,6 +45,8 @@ public class Reception extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         
+        
+        
         try{
             Class.forName("org.postgresql.Driver");
             String cmpHost = "cmpstudb-02.cmp.uea.ac.uk";
@@ -52,28 +60,21 @@ public class Reception extends HttpServlet {
             
             // connect to database on my laptop
             //Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost/postgres", "postgres", "fuck1234");
-            
-            
-            
+           
             Statement statement = connection.createStatement();
             
             statement.execute("SET SEARCH_PATH TO hotelbooking;");
             
             getDetails(request, response, statement);
+            create_cookies(response);
             connection.close();
             
-            // makes sure all cookies expire after 30 mins
-//            Cookie[] c = request.getCookies();
-//            for(int i = 0; i < c.length; i++){
-//                c[i].setMaxAge(30 * 60);
-//            }
-            
-            response.sendRedirect("reception-home.html");
-            
         } catch (Exception e) {
-           
+            next_page = error_page;
         }  
         
+        response.sendRedirect(next_page);
+          
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -131,19 +132,15 @@ public class Reception extends HttpServlet {
            
             // if reference not found go back to home
             } else if(!ref_exists(statement, response)){
-               response.sendRedirect("reception-home.html"); 
+                response.sendRedirect("reception-home.html"); 
             } 
+        // if error go back to reception home
         } catch(Exception e) {
-                response.sendRedirect("reception-home.html");
+            response.sendRedirect("reception-home.html"); 
         } 
         // get all booking details
         get_all_the_details(statement, request, response);
         
-        //put the details in cookies
-        create_cookies(response);
-        
-        // go to next webpage.
-        response.sendRedirect("reception-manage.html");
     }
 
     // gets booking reference from cusrtomer name and checkin date.
@@ -222,28 +219,70 @@ public class Reception extends HttpServlet {
         }
     }
 
+    // creates the cookies that will be used by next page (reception-manage.html)
     private void create_cookies(HttpServletResponse response) {
-        response.addCookie(new Cookie("b_ref", b_ref));
-        response.addCookie(new Cookie("c_name", c_name));
-        response.addCookie(new Cookie("check_in", check_in));
-        response.addCookie(new Cookie("check_out", check_out));
-        response.addCookie(new Cookie("total_cost", total_cost));
-        response.addCookie(new Cookie("balance", balance));
-        response.addCookie(new Cookie("cc_type", cc_type));
-        response.addCookie(new Cookie("cc_exp", cc_exp));
-        response.addCookie(new Cookie("cc_number", cc_number));
-        response.addCookie(new Cookie("notes", notes));
         
+        // max oge of cookie is 30 mins
+        int max_age = 30 * 60;
         
-        for(int i = 1; i <= number_rooms; i++){
-            if(i == 1){
-                response.addCookie(new Cookie("room1", room1));
-            } else if(i == 2){
-                response.addCookie(new Cookie("room2", room2));
-            } else if(i == 3){
-                response.addCookie(new Cookie("room3", room2));
+        Cookie a = new Cookie("b_ref", b_ref);
+        a.setMaxAge(max_age);
+        Cookie b = new Cookie("c_name", c_name);
+        b.setMaxAge(max_age);
+        Cookie c = new Cookie("check_in", check_in);
+        c.setMaxAge(max_age);
+        Cookie d = new Cookie("check_out", check_out);
+        d.setMaxAge(max_age);
+        Cookie e = new Cookie("total_cost", total_cost);
+        e.setMaxAge(max_age);
+        Cookie f = new Cookie("balance", balance);
+        f.setMaxAge(max_age);
+        Cookie g = new Cookie("cc_type", cc_type);
+        g.setMaxAge(max_age);
+        Cookie h = new Cookie("cc_exp", cc_exp);
+        h.setMaxAge(max_age);
+        Cookie i = new Cookie("cc_number", cc_number);
+        i.setMaxAge(max_age);
+        Cookie j = new Cookie("notes", notes);
+        j.setMaxAge(max_age);
+        
+        response.addCookie(a);
+        response.addCookie(b);
+        response.addCookie(c);
+        response.addCookie(d);
+        response.addCookie(e);
+        response.addCookie(f);
+        response.addCookie(g);
+        response.addCookie(h);
+        response.addCookie(i);
+        response.addCookie(j);
+       
+        Cookie r1,r2,r3;
+        // this is for multiple roooms up to three
+        for(int n = 1; n <= number_rooms; n++){
+            if(n == 1){
+                r1 = new Cookie("room1", room1);
+                r1.setMaxAge(max_age);
+                response.addCookie(r1);
+            } else if(n == 2){
+                r2 = new Cookie("room2", room2);
+                r2.setMaxAge(max_age);
+                response.addCookie(r2);
+            } else if(n == 3){
+                r3 = new Cookie("room3", room3);
+                r3.setMaxAge(max_age);
+                response.addCookie(r3);
             }
         }
+        
+       
+        
+        
+        
+        
+        
+        
+        
         
     }
 }
