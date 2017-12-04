@@ -70,7 +70,7 @@ public class check_availability extends HttpServlet {
             
             response.sendRedirect("reservation.html");
         } catch (Exception e){
-            
+            response.sendRedirect("error.html");
         }
         
     }

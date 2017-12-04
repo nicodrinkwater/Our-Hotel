@@ -44,9 +44,7 @@ public class Reception extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        
-        
-        
+          
         try{
             Class.forName("org.postgresql.Driver");
             String cmpHost = "cmpstudb-02.cmp.uea.ac.uk";

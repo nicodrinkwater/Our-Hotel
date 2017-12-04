@@ -1,9 +1,14 @@
-
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import javax.servlet.ServletException;
@@ -14,14 +19,16 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  *
- * @author nicod
- */
+ * @author qsb17hdu
+ * This servlet is called by housekeeping-home
+ * It's purpose is to see which rooms have status 'C' (checked out) and
+ * send this info to housekeeping-manage.
+*/
+public class Housekeeping extends HttpServlet {
 
-// this is so that database updated after reception checks customers in and out and take payments
-public class Reception_update extends HttpServlet {
-    
-    String b_ref;
-
+    String next_page = "housekeeping-manage.html";
+    String error_page = "error.html";
+    String rooms = "";
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -35,7 +42,7 @@ public class Reception_update extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         
-        try {
+        try{
             Class.forName("org.postgresql.Driver");
             String cmpHost = "cmpstudb-02.cmp.uea.ac.uk";
             String dbUsername = "qsb17hdu";
@@ -48,25 +55,19 @@ public class Reception_update extends HttpServlet {
             
             // connect to database on my laptop
             //Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost/postgres", "postgres", "fuck1234");
-            
-            
+           
             Statement statement = connection.createStatement();
             
             statement.execute("SET SEARCH_PATH TO hotelbooking;");
             
-            // get b_ref from cookies.
-            get_info(request);
-            
-            update_rooms(statement, request);
-            update_payment(statement, request);
-            
+            get_rooms(request, response, statement);
+            create_cookie(response, request);
             connection.close();
-            response.sendRedirect("reception-home.html");
+            
         } catch (Exception e) {
-            response.sendRedirect("error.html");
-        }
-        
-        
+            next_page = error_page;
+        }  
+        response.sendRedirect(next_page);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -108,39 +109,23 @@ public class Reception_update extends HttpServlet {
         return "Short description";
     }// </editor-fold>
 
-    // update the rooms if customer is checking in or out
-    private void update_rooms(Statement statement, HttpServletRequest request) throws SQLException {
-        String status = request.getParameter("status");
-        if(status != null){
-            if(status.equals("check_in")){
-                statement.executeUpdate("SELECT update_status(" + b_ref + ", 'X');");
-            } else if(status.equals("check_out")){
-                statement.executeUpdate("SELECT update_status(" + b_ref + ", 'C');");
-            }  
+    // this gets the rooms that have status 'C' from room in hotelbooking database
+    private void get_rooms(HttpServletRequest request, HttpServletResponse response, Statement statement) throws SQLException {
+        statement.executeQuery("SELECT r_no FROM room WHERE r_status = 'C';");
+        ResultSet r = statement.getResultSet();
+        while(r.next()){
+            rooms += r.getString(1) + ",";
         }
     }
 
-    // update balance in booking. 
-    private void update_payment(Statement statement, HttpServletRequest request) throws SQLException {
+    // this will create one cookie who's value is list of rooms with status 'C'
+    private void create_cookie(HttpServletResponse response, HttpServletRequest request) {
+        Cookie cookie = new Cookie("rooms", rooms);
         
-        String pay_amount = request.getParameter("pay_amount");
+        // max age is 30 mins
+        cookie.setMaxAge(-1);
         
-        if(pay_amount.equals("") || pay_amount.equals(null)){
-            // do nothing
-        } else {
-            statement.executeUpdate("Update booking SET b_outstanding = b_outstanding - " + pay_amount + " WHERE b_ref = " + b_ref + ";");
-        }
         
+        response.addCookie(cookie);
     }
-
-    private void get_info(HttpServletRequest request) {
-        Cookie[] cookies = request.getCookies();
-        
-        for(int i = 0; i < cookies.length; i++){
-            if(cookies[i].getName().equals("b_ref")){
-                b_ref = cookies[i].getValue();
-            }
-        }
-    }
-
 }

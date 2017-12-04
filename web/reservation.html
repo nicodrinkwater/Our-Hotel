@@ -63,7 +63,7 @@
             
             function check_form(){
                // TODO get parameters from form and check valid
-               
+               alert("Incorrect Card Number")
                return true;
             }
         </script>
@@ -98,7 +98,7 @@
 				</div>	
 			</div>
                         <!-- This is the form to take info for booking into database -->
-                        <form action="Complete_Booking" method="post">
+                        <form action="Complete_Booking" method="post" onsubmit="return check_form()">
 			<div class="content-page">
 			<div class="container">
 			

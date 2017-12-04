@@ -12,6 +12,10 @@
         <servlet-name>Reception_update</servlet-name>
         <servlet-class>Reception_update</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>Housekeeping</servlet-name>
+        <servlet-class>Housekeeping</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>check_availability</servlet-name>
         <url-pattern>/check_availability</url-pattern>
@@ -31,6 +35,10 @@
     <servlet-mapping>
         <servlet-name>Reception_update</servlet-name>
         <url-pattern>/Reception_update</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Housekeeping</servlet-name>
+        <url-pattern>/Housekeeping</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

@@ -66,7 +66,7 @@ public class Complete_Booking extends HttpServlet {
             response.sendRedirect("booked.html");
             
         } catch (Exception e) {
-           
+            response.sendRedirect("error.html");
         }
     }
    
