@@ -58,15 +58,15 @@ public class Complete_Booking extends HttpServlet {
             connection.close();
             
             // makes sure all cookies expire after 30 mins
-            Cookie[] c = request.getCookies();
-            for(int i = 0; i < c.length; i++){
-                c[i].setMaxAge(30 * 60);
-            }
+//            Cookie[] c = request.getCookies();
+//            for(int i = 0; i < c.length; i++){
+//                c[i].setMaxAge(30 * 60);
+//            }
             
             response.sendRedirect("booked.html");
             
         } catch (Exception e) {
-            response.sendRedirect("error.html");
+           
         }
     }
    

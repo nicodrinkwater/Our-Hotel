@@ -14,6 +14,7 @@
         <script>
             function get_info(){
                 var room = getCookie("room");
+                var nights = getCookie("nights");
                 var check_in = getCookie("check_in");
                 var check_out = getCookie("check_out");
                 var cost = getCookie("cost");
@@ -50,6 +51,7 @@
                                                 "<div class=\"booking-info\">" +
                                                 "<div class=\"item-info\"> <label>Room Type: </label> <span> " + room + " </span> </div>" +
                                                 "<div class=\"item-info\"> <label>Number of Rooms: </label> <span>" + number + " </span> </div>" +
+                                                "<div class=\"item-info\"> <label>Number of Nights: </label> <span>" + nights + " </span> </div>" +
 						"<div class=\"item-info\"> <label>Checking date: </label> <span> " + check_in + " </span> </div>" +
 						"<div class=\"item-info\"> <label>Checkout date: </label> <span> " + check_out + " </span> </div>" +
 						"<div class=\"item-info\"> <label>Total: </label> <span> £" + cost + " </span> </div>" +

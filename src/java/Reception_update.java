@@ -63,7 +63,7 @@ public class Reception_update extends HttpServlet {
             connection.close();
             response.sendRedirect("reception-home.html");
         } catch (Exception e) {
-            response.sendRedirect("error.html");
+            
         }
         
         

@@ -63,19 +63,16 @@ public class check_availability extends HttpServlet {
             create_Cookies(request, response, statement);
 
             // makes sure all cookies expire after 30 mins
-            Cookie[] c = request.getCookies();
-            for(int i = 0; i < c.length; i++){
-                c[i].setMaxAge(30 * 60);
-            }
+//            Cookie[] c = request.getCookies();
+//            for(int i = 0; i < c.length; i++){
+//                c[i].setMaxAge(30 * 60);
+//            }
             
             response.sendRedirect("reservation.html");
         } catch (Exception e){
-            response.sendRedirect("error.html");
+            
         }
         
-  
-        
-       
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -141,36 +138,45 @@ public class check_availability extends HttpServlet {
         statement.executeQuery("SELECT check_room('" + check_in + "', '" + check_out + "', '" + room +"')");
         ResultSet r = statement.getResultSet();
         
-        
-        
+       
         // if number available < number required send the customer to the unavailable page.
         while(r.next()){
             int num_avail = r.getInt(1);
             
             if(num_avail < number){
                 response.sendRedirect("unavailable.html");
-              
             }
         }
         
+        int number_of_nights = 1;
+        statement.executeQuery("SELECT number_of_nights('" + check_in + "', '" + check_out + "')");
+        r = statement.getResultSet();
+        
+       
+        // gets the muber of nights that booking would constitute from database
+        while(r.next()){
+            number_of_nights = r.getInt(1);
+        }
+//        
         float cost = 0;
         if("std_d".equals(room)){
-            cost = (number * 65);
+            cost = (number * 65 * number_of_nights);
         } else if("std_t".equals(room)){
-            cost = (number * 55);
+            cost = (number * 55 * number_of_nights);
         } else if("sup_d".equals(room)){
-            cost = (number * 90);
+            cost = (number * 90 * number_of_nights);
         } else if("sup_t".equals(room)){
-        } else {
-            cost = (number * 75);
-        }
+            cost = (number * 75 * number_of_nights);
+        } 
         
         // create the cookies with info that will be accessed by the next page (reservation.html)
         response.addCookie(new Cookie("room", room));
+        response.addCookie(new Cookie("nights", Integer.toString(number_of_nights)));
         response.addCookie(new Cookie("check_in", check_in));
         response.addCookie(new Cookie("check_out", check_out));
         response.addCookie(new Cookie("cost", Float.toString(cost)));
         response.addCookie(new Cookie("number", Integer.toString(number)));
+        
        
        
     }
