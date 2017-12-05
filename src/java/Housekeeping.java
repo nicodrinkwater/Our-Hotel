@@ -120,12 +120,18 @@ public class Housekeeping extends HttpServlet {
 
     // this will create one cookie who's value is list of rooms with status 'C'
     private void create_cookie(HttpServletResponse response, HttpServletRequest request) {
-        Cookie cookie = new Cookie("rooms", rooms);
         
-        // max age is 30 mins
-        cookie.setMaxAge(-1);
-        
-        
-        response.addCookie(cookie);
+        // this stops the same cookie having data added and added
+        Cookie[] c = request.getCookies();
+        if(c != null){
+            for(int i = 0; i < c.length; i++){
+                c[i].setValue(rooms);
+            }
+        } else {
+            Cookie cookie = new Cookie("rooms", rooms);
+            cookie.setHttpOnly(false);
+            cookie.setMaxAge(-1); 
+            response.addCookie(cookie);
+        }
     }
 }
