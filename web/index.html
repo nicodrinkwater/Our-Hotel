@@ -14,17 +14,35 @@
     <!-- this javascript checks that the check in and check out dates are valid before going to check availability -->
     <script type="text/javascript">
         function check_form(){
-            var check_in = document.forms["reserve"]["check_in"].value;
-            var check_out = document.forms["reserve"]["check_out"].value;
+            var check_in =  new Date(document.forms["reserve"]["check_in"].value);
+            var check_out = new Date(document.forms["reserve"]["check_out"].value);
             var number = document.forms["reserve"]["number"].value;
             
-            if(check_in > check_out){
-                alert("Wrong!");
+            today = new Date();
+
+        if ( check_in.getFullYear() >= 2019 ) {
+            alert("Year must be less than 2019 !");
+            return false;
+        }
+        
+        if (today > check_in) {
+            alert("Check in date must be from tomorrow !");
+            return false;
+        }
+
+        if(check_in >= check_out){
+            alert("Check out date must greater than check in date !");
                 return false;
             }
-            
-            return true;
-           
+        
+        if(check_out > check_in) {
+            days = parseInt((check_out - check_in) / (1000 * 60 * 60 * 24)); 
+            if (days > 14) {
+                alert("Cant book for more than 14 days !");
+                return false;
+            }
+        }
+        return true;
         }
        
     </script>
@@ -105,7 +123,7 @@
 								  <div class="gdlr-room-info"><i class="fa fa-check-square-o icon-check"></i><span class="gdlr-head">View</span><span class="gdlr-tail">City</span></div>
 								  <div class="gdlr-room-info"><i class="fa fa-check-square-o icon-check"></i><span class="gdlr-head">TV</span><span class="gdlr-tail">No</span></div>
 								  <div class="gdlr-room-info"><i class="fa fa-check-square-o icon-check"></i><span class="gdlr-head">Max People</span><span class="gdlr-tail">2</span></div>
-								  <div class="gdlr-room-price"><span class="gdlr-head">Start From</span><span class="gdlr-tail">£65 / Night</span></div>
+								  <div class="gdlr-room-price"><span class="gdlr-head">Just</span><span class="gdlr-tail">£65 / Night</span></div>
 								  <div class="clear"></div>
 							   </div>
 							   <a class="gdlr-button with-border" href="">Check Details<i class="fa fa-long-arrow-right icon-long-arrow-right"></i></a>
@@ -121,7 +139,7 @@
 								  <div class="gdlr-room-info"><i class="fa fa-check-square-o icon-check"></i><span class="gdlr-head">View</span><span class="gdlr-tail">City</span></div>
 								  <div class="gdlr-room-info"><i class="fa fa-check-square-o icon-check"></i><span class="gdlr-head">TV</span><span class="gdlr-tail">No</span></div>
 								  <div class="gdlr-room-info"><i class="fa fa-check-square-o icon-check"></i><span class="gdlr-head">Max People</span><span class="gdlr-tail">2</span></div>								  
-  								  <div class="gdlr-room-price"><span class="gdlr-head">Start From</span><span class="gdlr-tail">£55 / Night</span></div>
+  								  <div class="gdlr-room-price"><span class="gdlr-head">Just</span><span class="gdlr-tail">£55 / Night</span></div>
 								  <div class="clear"></div>
 							   </div>
 							   <a class="gdlr-button with-border" href="">Check Details<i class="fa fa-long-arrow-right icon-long-arrow-right"></i></a>
@@ -137,7 +155,7 @@
 								  <div class="gdlr-room-info"><i class="fa fa-check-square-o icon-check"></i><span class="gdlr-head">View</span><span class="gdlr-tail">River</span></div>
 								  <div class="gdlr-room-info"><i class="fa fa-check-square-o icon-check"></i><span class="gdlr-head">TV</span><span class="gdlr-tail">40'' LCD</span></div>
 								  <div class="gdlr-room-info"><i class="fa fa-check-square-o icon-check"></i><span class="gdlr-head">Max People</span><span class="gdlr-tail">2</span></div>
-								  <div class="gdlr-room-price"><span class="gdlr-head">Start From</span><span class="gdlr-tail">£90 / Night</span></div>
+								  <div class="gdlr-room-price"><span class="gdlr-head">Just</span><span class="gdlr-tail">£90 / Night</span></div>
 								  <div class="clear"></div>
 							   </div>
 							   <a class="gdlr-button with-border" href="">Check Details<i class="fa fa-long-arrow-right icon-long-arrow-right"></i></a>
@@ -153,7 +171,7 @@
 								  <div class="gdlr-room-info"><i class="fa fa-check-square-o icon-check"></i><span class="gdlr-head">View</span><span class="gdlr-tail">River</span></div>
 								  <div class="gdlr-room-info"><i class="fa fa-check-square-o icon-check"></i><span class="gdlr-head">TV</span><span class="gdlr-tail">32'' LCD</span></div>
 								  <div class="gdlr-room-info"><i class="fa fa-check-square-o icon-check"></i><span class="gdlr-head">Max People</span><span class="gdlr-tail">2</span></div>								  
-								  <div class="gdlr-room-price"><span class="gdlr-head">Start From</span><span class="gdlr-tail">$75 / Night</span></div>
+								  <div class="gdlr-room-price"><span class="gdlr-head">Just</span><span class="gdlr-tail">$75 / Night</span></div>
 								  <div class="clear"></div>
 							   </div>
 							   <a class="gdlr-button with-border" href="">Check Details<i class="fa fa-long-arrow-right icon-long-arrow-right"></i></a>
@@ -230,6 +248,11 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	
 	<script>
+window.onload=function(){
+var today = new Date().toISOString().split('T')[0];
+document.getElementsByName("setTodaysDate")[0].setAttribute('min', today);
+}
+        
 	jQuery(window).scroll(function(){                
 
 		if(jQuery(window).scrollTop() > 100){

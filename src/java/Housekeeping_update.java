@@ -17,7 +17,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 /**
  *
  * @author qsb17hdu
@@ -46,13 +45,12 @@ public class Housekeeping_update extends HttpServlet {
             Statement statement = connection.createStatement();
             
             statement.execute("SET SEARCH_PATH TO hotelbooking;");
-            
+
             update_rooms(request, response, statement);
             
             connection.close();
-            
-            RequestDispatcher rd = getServletContext().getRequestDispatcher("/housekeeping-home.html");
            
+            RequestDispatcher rd = getServletContext().getRequestDispatcher("housekeeping-success.html");
             rd.forward(request, response);
             
         } catch (Exception e) {
@@ -101,23 +99,20 @@ public class Housekeeping_update extends HttpServlet {
     }// </editor-fold>
 
     private void update_rooms(HttpServletRequest request, HttpServletResponse response, Statement statement) throws SQLException {
-        
-        String r_number = "", r_status = "";
-        statement.executeQuery("SELECT COUNT(r_no) AS num FROM room WHERE r_status = 'C';");
-        ResultSet result = statement.getResultSet();
-        String count = result.getString(1);
-        int n = Integer.parseInt(count);
-        
-     
-        for(int i = 0; i < n; i++){
-            statement.executeQuery("SELECT r_no FROM room WHERE r_status = 'C';");
-            ResultSet r = statement.getResultSet();
-            for(int j = 0; j <= i; j++){
-                r.next();
-            } 
-            r_number = r.getString(1);   
-            r_status = request.getParameter(r_number);
-            statement.executeUpdate("UPDATE room SET r_status = '" + r_status + "' WHERE r_no = " + r_number + "; ");
+        int[] r_number = new int[34];
+        String[] r_status = new String[34];
+        int i=0;
+        statement.executeQuery("SELECT r_no FROM room WHERE r_status = 'C';");
+        ResultSet r = statement.getResultSet();
+      
+        while (r.next()) {
+            r_number[i] = r.getInt(1);
+            r_status[i] = request.getParameter(Integer.toString(r_number[i]));
+            i++;
+        }
+
+        for (int j=0; j<r_number.length; j++) {
+            statement.executeUpdate("UPDATE room SET r_status = '" + r_status[j] + "' WHERE r_no = " + r_number[j] + "; ");
         }
     }
 }
