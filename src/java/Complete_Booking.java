@@ -8,12 +8,14 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -49,21 +51,17 @@ public class Complete_Booking extends HttpServlet {
             Statement statement = connection.createStatement();
             
             statement.execute("SET SEARCH_PATH TO hotelbooking;");
-            
-            
+           
             add_customer_to_db(statement, request);
             add_booking_to_db(statement, request);
-           
-            create_cookies(request, response);
+            
+            createData(request);
             connection.close();
             
-            // makes sure all cookies expire after 30 mins
-//            Cookie[] c = request.getCookies();
-//            for(int i = 0; i < c.length; i++){
-//                c[i].setMaxAge(30 * 60);
-//            }
-            
-            response.sendRedirect("booked.html");
+            RequestDispatcher rd = getServletContext().getRequestDispatcher("/booked.jsp");
+           
+            rd.forward(request, response);
+           
             
         } catch (Exception e) {
             response.sendRedirect("error.html");
@@ -148,24 +146,29 @@ public class Complete_Booking extends HttpServlet {
     // adds booking to database
     private void add_booking_to_db(Statement statement, HttpServletRequest request) {
         
-        Cookie[] booking_details = request.getCookies();
-        for (int i = 0; i < booking_details.length; i++) {
-            String name = booking_details[i].getName();
-            String value = booking_details[i].getValue();
-            
-            if("room".equals(name)){
-                room = value;
-            } else if("check_in".equals(name)){
-                check_in = value;
-            } else if("check_out".equals(name)){
-                check_out = value;
-            } else if("number".equals(name)){
-                number_rooms = value;
-            } else if("cost".equals(name)){
-                cost = value;
-            }
-        }
-       
+//        Cookie[] booking_details = request.getCookies();
+//        for (int i = 0; i < booking_details.length; i++) {
+//            String name = booking_details[i].getName();
+//            String value = booking_details[i].getValue();
+//            
+//            if("room".equals(name)){
+//                room = value;
+//            } else if("check_in".equals(name)){
+//                check_in = value;
+//            } else if("check_out".equals(name)){
+//                check_out = value;
+//            } else if("number".equals(name)){
+//                number_rooms = value;
+//            } else if("cost".equals(name)){
+//                cost = value;
+//            }
+//        }
+        HttpSession s = request.getSession();
+        check_out = s.getAttribute("check_out").toString();
+        check_in = s.getAttribute("check_in").toString();
+        room = s.getAttribute("room").toString();
+        cost = s.getAttribute("cost").toString();
+        number_rooms = s.getAttribute("number").toString();
         
         try {
                 ResultSet r = statement.executeQuery("select max(b_ref) from booking");
@@ -182,14 +185,15 @@ public class Complete_Booking extends HttpServlet {
         }
     }
 
-    // creates the cookies containing info that will be accessed by the next html page (confimation page)
-    private void create_cookies(HttpServletRequest request, HttpServletResponse response) {
+   
+    private void createData(HttpServletRequest request) {
+        HttpSession s = request.getSession();
         
-        response.addCookie(new Cookie("name", name));
-        response.addCookie(new Cookie("email", email));
-        response.addCookie(new Cookie("address", address));
-        response.addCookie(new Cookie("cc_type", cc_type));
-        response.addCookie(new Cookie("cc_number", cc_number));  
-        response.addCookie(new Cookie("b_ref", Integer.toString(b_ref)));  
+        s.setAttribute("name", name); 
+        s.setAttribute("email", email);
+        s.setAttribute("address", address);
+        s.setAttribute("cc_type", cc_type);
+        s.setAttribute("cc_number", cc_number);
+        s.setAttribute("b_ref", Integer.toString(b_ref));
     }
 }

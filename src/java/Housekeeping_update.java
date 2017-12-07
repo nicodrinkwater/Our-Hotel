@@ -11,39 +11,24 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import javax.servlet.*;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 /**
  *
  * @author qsb17hdu
- * This servlet is called by housekeeping-home
- * It's purpose is to see which rooms have status 'C' (checked out) and
- * send this info to housekeeping-manage.
-*/
-public class Housekeeping extends HttpServlet {
-
-    String next_page = "housekeeping-manage.html";
-    String error_page = "error.html";
-    String rooms = "";
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
+ */
+@WebServlet(urlPatterns = {"/Housekeeping_update"})
+public class Housekeeping_update extends HttpServlet {
+    
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        
+       
         try{
             Class.forName("org.postgresql.Driver");
             String cmpHost = "cmpstudb-02.cmp.uea.ac.uk";
@@ -62,20 +47,18 @@ public class Housekeeping extends HttpServlet {
             
             statement.execute("SET SEARCH_PATH TO hotelbooking;");
             
-            get_rooms(request, response, statement);
-            //create_cookie(response, request);
+            update_rooms(request, response, statement);
+            
             connection.close();
             
-
-            RequestDispatcher rd = getServletContext().getRequestDispatcher("/Housekeeping-manage.jsp");
+            RequestDispatcher rd = getServletContext().getRequestDispatcher("/housekeeping-home.html");
            
             rd.forward(request, response);
             
-            
         } catch (Exception e) {
-            next_page = error_page;
+            response.sendRedirect("error.html");
         }  
-        //response.sendRedirect(next_page);
+        
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -117,18 +100,24 @@ public class Housekeeping extends HttpServlet {
         return "Short description";
     }// </editor-fold>
 
-    // this gets the rooms that have status 'C' from room in hotelbooking database
-    private void get_rooms(HttpServletRequest request, HttpServletResponse response, Statement statement) throws SQLException {
-        statement.executeQuery("SELECT r_no FROM room WHERE r_status = 'C';");
-        rooms = "";
-        ResultSet r = statement.getResultSet();
-        while(r.next()){
-            rooms += r.getString(1) + ",";
-        }
-        HttpSession s = request.getSession();
+    private void update_rooms(HttpServletRequest request, HttpServletResponse response, Statement statement) throws SQLException {
         
-        s.setAttribute("rooms", rooms);
+        String r_number = "", r_status = "";
+        statement.executeQuery("SELECT COUNT(r_no) AS num FROM room WHERE r_status = 'C';");
+        ResultSet result = statement.getResultSet();
+        String count = result.getString(1);
+        
+        String f = count;
+       
+        for(int i = 0; i < 4; i++){
+            statement.executeQuery("SELECT r_no FROM room WHERE r_status = 'C';");
+            ResultSet r = statement.getResultSet();
+            for(int j = 0; j <= i; j++){
+                r.next();
+            } 
+            r_number = r.getString(1);   
+            r_status = request.getParameter(r_number);
+            statement.executeUpdate("UPDATE room SET r_status = '" + r_status + "' WHERE r_no = " + r_number + "; ");
+        }
     }
-
-    
 }

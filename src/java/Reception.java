@@ -14,6 +14,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -64,14 +65,17 @@ public class Reception extends HttpServlet {
             statement.execute("SET SEARCH_PATH TO hotelbooking;");
             
             getDetails(request, response, statement);
-            create_cookies(response);
+           
+            createData(request);
             connection.close();
             
+            RequestDispatcher rd = getServletContext().getRequestDispatcher("/reception-manage.jsp");
+           
+            rd.forward(request, response);
+            
         } catch (Exception e) {
-            next_page = error_page;
+            response.sendRedirect(error_page);
         }  
-        
-        response.sendRedirect(next_page);
           
     }
 
@@ -216,71 +220,16 @@ public class Reception extends HttpServlet {
             n++;
         }
     }
-
-    // creates the cookies that will be used by next page (reception-manage.html)
-    private void create_cookies(HttpServletResponse response) {
-        
-        // max oge of cookie is 30 mins
-        int max_age = 30 * 60;
-        
-        Cookie a = new Cookie("b_ref", b_ref);
-        a.setMaxAge(max_age);
-        Cookie b = new Cookie("c_name", c_name);
-        b.setMaxAge(max_age);
-        Cookie c = new Cookie("check_in", check_in);
-        c.setMaxAge(max_age);
-        Cookie d = new Cookie("check_out", check_out);
-        d.setMaxAge(max_age);
-        Cookie e = new Cookie("total_cost", total_cost);
-        e.setMaxAge(max_age);
-        Cookie f = new Cookie("balance", balance);
-        f.setMaxAge(max_age);
-        Cookie g = new Cookie("cc_type", cc_type);
-        g.setMaxAge(max_age);
-        Cookie h = new Cookie("cc_exp", cc_exp);
-        h.setMaxAge(max_age);
-        Cookie i = new Cookie("cc_number", cc_number);
-        i.setMaxAge(max_age);
-        Cookie j = new Cookie("notes", notes);
-        j.setMaxAge(max_age);
-        
-        response.addCookie(a);
-        response.addCookie(b);
-        response.addCookie(c);
-        response.addCookie(d);
-        response.addCookie(e);
-        response.addCookie(f);
-        response.addCookie(g);
-        response.addCookie(h);
-        response.addCookie(i);
-        response.addCookie(j);
-       
-        Cookie r1,r2,r3;
-        // this is for multiple roooms up to three
-        for(int n = 1; n <= number_rooms; n++){
-            if(n == 1){
-                r1 = new Cookie("room1", room1);
-                r1.setMaxAge(max_age);
-                response.addCookie(r1);
-            } else if(n == 2){
-                r2 = new Cookie("room2", room2);
-                r2.setMaxAge(max_age);
-                response.addCookie(r2);
-            } else if(n == 3){
-                r3 = new Cookie("room3", room3);
-                r3.setMaxAge(max_age);
-                response.addCookie(r3);
-            }
-        }
-        
-       
-        
-        
-        
-        
-        
-        
-        
-        
+    
+    private void createData(HttpServletRequest request){
+        HttpSession s = request.getSession();
+        s.setAttribute("b_ref", b_ref);
+        s.setAttribute("c_name", c_name);
+        s.setAttribute("check_in", check_in);
+        s.setAttribute("check_out", check_out);
+        s.setAttribute("total_cost", total_cost);
+        s.setAttribute("balance", balance);
+        s.setAttribute("notes", notes);
+    
     }
 }

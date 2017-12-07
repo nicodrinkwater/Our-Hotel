@@ -8,12 +8,14 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -59,16 +61,14 @@ public class check_availability extends HttpServlet {
 
             statement.executeUpdate("SET SEARCH_PATH TO hotelbooking; ");
 
-            // create the cookies that hold checkin, checkout and room info
-            create_Cookies(request, response, statement);
-
-            // makes sure all cookies expire after 30 mins
-//            Cookie[] c = request.getCookies();
-//            for(int i = 0; i < c.length; i++){
-//                c[i].setMaxAge(30 * 60);
-//            }
+            // set the attributes that hold checkin, checkout and room info
+            create_Data(request, response, statement);
             
-            response.sendRedirect("reservation.html");
+            RequestDispatcher rd = getServletContext().getRequestDispatcher("/reservation.jsp");
+            rd.forward(request, response);
+            
+ 
+           
         } catch (Exception e){
             response.sendRedirect("error.html");
         }
@@ -127,7 +127,7 @@ public class check_availability extends HttpServlet {
     }// </editor-fold>
 
     // create the cookies that hold checkin, checkout and room info
-    private void create_Cookies(HttpServletRequest request, HttpServletResponse response, Statement statement) throws SQLException, IOException {
+    private void create_Data(HttpServletRequest request, HttpServletResponse response, Statement statement) throws SQLException, IOException {
         
         String room = request.getParameter("room");
         String check_in = request.getParameter("check_in");
@@ -169,15 +169,17 @@ public class check_availability extends HttpServlet {
             cost = (number * 75 * number_of_nights);
         } 
         
-        // create the cookies with info that will be accessed by the next page (reservation.html)
-        response.addCookie(new Cookie("room", room));
-        response.addCookie(new Cookie("nights", Integer.toString(number_of_nights)));
-        response.addCookie(new Cookie("check_in", check_in));
-        response.addCookie(new Cookie("check_out", check_out));
-        response.addCookie(new Cookie("cost", Float.toString(cost)));
-        response.addCookie(new Cookie("number", Integer.toString(number)));
+        HttpSession s = request.getSession();
         
+        s.setAttribute("room", room);
+        s.setAttribute("nights", Integer.toString(number_of_nights));
+        s.setAttribute("check_in", check_in);
+        s.setAttribute("check_out", check_out);
+        s.setAttribute("cost", Float.toString(cost));
+        s.setAttribute("number", Integer.toString(number));
        
        
     }
 }
+
+   

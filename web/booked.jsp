@@ -1,4 +1,12 @@
+<%-- 
+    Document   : booked
+    Created on : 07-Dec-2017, 15:19:42
+    Author     : qsb17hdu
+--%>
+
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
+
 <html lang="en">
   <head> 
     <meta charset="utf-8">
@@ -13,28 +21,14 @@
         <!-- this javascript gets the room, check in, check out info from cookie and writes it to page -->
         <script>
             function get_info(){
-                var room = getCookie("room");
-                var check_in = getCookie("check_in");
-                var check_out = getCookie("check_out");
-                var cost = getCookie("cost");
-                var number = getCookie("number");
-                var b_ref = getCookie("b_ref");
+                var room = "${room}";
+                var check_in = "${check_in}";
+                var check_out = "${check_out}";
+                var cost = "${cost}";
+                var number = "${number}";
+                var b_ref = "${b_ref}";
                
-                function getCookie(cname) {
-                    var name = cname + "=";
-                    var decodedCookie = decodeURIComponent(document.cookie);
-                    var ca = decodedCookie.split(';');
-                    for(var i = 0; i <ca.length; i++) {
-                        var c = ca[i];
-                        while (c.charAt(0) == ' ') {
-                            c = c.substring(1);
-                        }
-                        if (c.indexOf(name) == 0) {
-                            return c.substring(name.length, c.length);
-                        }
-                    }
-                    return "";
-                } 
+               
                 
                 if("std_d" === room){
                     room = "Standard Double";

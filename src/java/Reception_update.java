@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
@@ -61,11 +62,13 @@ public class Reception_update extends HttpServlet {
             update_payment(statement, request);
             
             connection.close();
-            response.sendRedirect("reception-home.html");
+            RequestDispatcher rd = getServletContext().getRequestDispatcher("/reception-home.html");
+           
+            rd.forward(request, response);
+            
         } catch (Exception e) {
             response.sendRedirect("error.html");
         }
-        
         
     }
 
@@ -134,13 +137,7 @@ public class Reception_update extends HttpServlet {
     }
 
     private void get_info(HttpServletRequest request) {
-        Cookie[] cookies = request.getCookies();
-        
-        for(int i = 0; i < cookies.length; i++){
-            if(cookies[i].getName().equals("b_ref")){
-                b_ref = cookies[i].getValue();
-            }
-        }
+        b_ref = request.getSession().getAttribute("b_ref").toString();
     }
 
 }
