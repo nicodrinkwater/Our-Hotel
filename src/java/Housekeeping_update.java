@@ -106,10 +106,10 @@ public class Housekeeping_update extends HttpServlet {
         statement.executeQuery("SELECT COUNT(r_no) AS num FROM room WHERE r_status = 'C';");
         ResultSet result = statement.getResultSet();
         String count = result.getString(1);
+        int n = Integer.parseInt(count);
         
-        String f = count;
-       
-        for(int i = 0; i < 4; i++){
+     
+        for(int i = 0; i < n; i++){
             statement.executeQuery("SELECT r_no FROM room WHERE r_status = 'C';");
             ResultSet r = statement.getResultSet();
             for(int j = 0; j <= i; j++){
