@@ -73,17 +73,15 @@
 			<div class="content-page">
 			<div class="container">
                             
-                           
-                            <form action="Housekeeping_update" method="post">
-                                <div id="room_list">
-                                 <!-- this shows the list of rooms that are checked out -->
-                                
-                                </div>
-                                <button type="submit">Update Room</button>
-                            </form>
-			
+                            <p align="center">
+                                <form action="Housekeeping_update" method="post">
+                                    <div id="room_list">
+                                     <!-- this shows the list of rooms that are checked out -->
 
-			
+                                    </div>
+                                    <button type="submit">Update Room</button>
+                                </form>
+                            </p>
 			</div>
 			</div>
 			</div>
