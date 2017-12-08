@@ -119,7 +119,7 @@ public class Housekeeping_update extends HttpServlet {
         }
        
         for (int j=0; j < r_number.length; j++) {
-            if(r_number[j] > 1){
+            if(r_number[j] > 0){
             statement.executeUpdate("UPDATE room SET r_status = '" + r_status[j] + "' WHERE r_no = " + r_number[j] + "; ");
             }
         }

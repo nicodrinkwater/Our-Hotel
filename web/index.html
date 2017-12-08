@@ -21,7 +21,7 @@
             today = new Date();
 
         if ( check_in.getFullYear() >= 2019 ) {
-            alert("Year must be less than 2019 !");
+            alert("Year must be less than 2019!");
             return false;
         }
         
@@ -38,7 +38,7 @@
         if(check_out > check_in) {
             days = parseInt((check_out - check_in) / (1000 * 60 * 60 * 24)); 
             if (days > 14) {
-                alert("Cant book for more than 14 days !");
+                alert("Can't book for more than 14 days !");
                 return false;
             }
         }

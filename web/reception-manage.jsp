@@ -32,8 +32,6 @@
                 var notes = "${notes}";
                 
                
-               
-                
                 // writes the html to show info on page
                 document.getElementById("booking_info").innerHTML = 
                                                 "<p align=\"center\">" + 
@@ -49,8 +47,7 @@
                                                 "<div class=\"item-info\"> <input type=\"numeric\" min=\"0\" name=\"extras\">Food & Drink</div>" +
                                                 "<div class=\"item-info\"> <input type=\"numeric\" min=\"0\" name=\"pay_amount\" placeholder=\"Amount\" value=\"0.0\">Pay<br>" +
                                                 "</div>" +
-                                                "</p>"
-                                     
+                                                "</p>"                    
             }
             
             // checks amount to pay is correct. 
@@ -135,7 +132,6 @@
 		else {
 			jQuery('.site-header').removeClass('top-header-fixed'); 
 		}
-		
 	});
 	jQuery(document).ready(function($){ 
 		$('.buttonmenu-mobile').click(function(){

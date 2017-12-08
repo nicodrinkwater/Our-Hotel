@@ -1,7 +1,7 @@
 <%-- 
     Document   : booked
     Created on : 07-Dec-2017, 15:19:42
-    Author     : qsb17hdu
+    Author     : Nico,Alan,Larry
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -28,8 +28,7 @@
                 var number = "${number}";
                 var b_ref = "${b_ref}";
                
-               
-                
+              
                 if("std_d" === room){
                     room = "Standard Double";
                 } else if("std_t" === room){
