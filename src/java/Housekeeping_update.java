@@ -50,7 +50,7 @@ public class Housekeeping_update extends HttpServlet {
             
             connection.close();
            
-            RequestDispatcher rd = getServletContext().getRequestDispatcher("housekeeping-success.html");
+            RequestDispatcher rd = getServletContext().getRequestDispatcher("/housekeeping-success.html");
             rd.forward(request, response);
             
         } catch (Exception e) {
@@ -110,9 +110,12 @@ public class Housekeeping_update extends HttpServlet {
             r_status[i] = request.getParameter(Integer.toString(r_number[i]));
             i++;
         }
-
-        for (int j=0; j<r_number.length; j++) {
+       
+        for (int j=0; j < r_number.length; j++) {
+            if(r_number[j] > 1){
             statement.executeUpdate("UPDATE room SET r_status = '" + r_status[j] + "' WHERE r_no = " + r_number[j] + "; ");
+            }
         }
+        
     }
 }
