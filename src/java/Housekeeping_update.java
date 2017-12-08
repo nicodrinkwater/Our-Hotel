@@ -17,9 +17,11 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+
 /**
  *
- * @author qsb17hdu
+ * This servlet is for housekeeping to change the status of rooms that are checked out.
  */
 @WebServlet(urlPatterns = {"/Housekeeping_update"})
 public class Housekeeping_update extends HttpServlet {
@@ -46,10 +48,12 @@ public class Housekeeping_update extends HttpServlet {
             
             statement.execute("SET SEARCH_PATH TO hotelbooking;");
 
+            // change status of rooms.
             update_rooms(request, response, statement);
             
             connection.close();
            
+            // forwards to the next page.
             RequestDispatcher rd = getServletContext().getRequestDispatcher("/housekeeping-success.html");
             rd.forward(request, response);
             
@@ -98,7 +102,10 @@ public class Housekeeping_update extends HttpServlet {
         return "Short description";
     }// </editor-fold>
 
+    // updates rooms status of those rooms that were checked out
     private void update_rooms(HttpServletRequest request, HttpServletResponse response, Statement statement) throws SQLException {
+        
+        
         int[] r_number = new int[34];
         String[] r_status = new String[34];
         int i=0;

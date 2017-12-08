@@ -20,9 +20,10 @@ import javax.servlet.http.HttpSession;
  * @author nicod
  */
 
-// this is so that database updated after reception checks customers in and out and take payments
+// this is so that database updated after reception checks customers in and out and take payments, add notes.
 public class Reception_update extends HttpServlet {
     
+    // notes and balance are the variables that can change on reception updating.
     String b_ref, notes, balance;
 
     /**
@@ -57,16 +58,21 @@ public class Reception_update extends HttpServlet {
             
             statement.execute("SET SEARCH_PATH TO hotelbooking;");
             
-            // get b_ref from cookies.
+          
+            // get b_ref
             get_info(request);
+            
+            // update if notes or extras added.
             add_new_info(request, statement);
+            
             update_rooms(statement, request);
             update_payment(statement, request);
             update_page(request, statement);
             
             connection.close();
+            
+            // forward to same page but with updated info.
             RequestDispatcher rd = getServletContext().getRequestDispatcher("/reception-manage.jsp");
-           
             rd.forward(request, response);
             
         } catch (Exception e) {
@@ -145,10 +151,12 @@ public class Reception_update extends HttpServlet {
         
     }
 
+    // gets the b_ref from session.
     private void get_info(HttpServletRequest request) {
         b_ref = request.getSession().getAttribute("b_ref").toString();
     }
 
+    // adds notes and updates balance if extras added.
     private void add_new_info(HttpServletRequest request, Statement statement) throws SQLException {
         notes = request.getParameter("notes");
         String extras = request.getParameter("extras");
@@ -169,6 +177,7 @@ public class Reception_update extends HttpServlet {
        
     }
     
+    // updates the html page with the new data
     private void update_page(HttpServletRequest request, Statement statement) throws SQLException {
         statement.executeQuery("SELECT b_outstanding FROM booking WHERE b_ref = " + b_ref + ";");
         ResultSet r = statement.getResultSet();

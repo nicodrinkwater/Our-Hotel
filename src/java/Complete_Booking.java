@@ -44,9 +44,7 @@ public class Complete_Booking extends HttpServlet {
             /* Uncomment this to connect to uni database .*/
             Connection connection = DriverManager.getConnection(myDBurl, dbName, dbPassword);
             
-            // connect to database on my laptop
-            //Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost/postgres", "postgres", "fuck1234");
-            
+          
             
             Statement statement = connection.createStatement();
             
@@ -54,12 +52,12 @@ public class Complete_Booking extends HttpServlet {
            
             add_customer_to_db(statement, request);
             add_booking_to_db(statement, request);
-            
+            // adds data to session info.
             createData(request);
             connection.close();
             
+            // forwards to next page. The comfirmation page for customer where they receive their booking reference number
             RequestDispatcher rd = getServletContext().getRequestDispatcher("/booked.jsp");
-           
             rd.forward(request, response);
            
             
@@ -96,7 +94,8 @@ public class Complete_Booking extends HttpServlet {
 
     // checks if new or not then either updates or adds new customer to database
     private void add_customer_to_db(Statement statement, HttpServletRequest request) throws SQLException {
-          
+            
+            // get the info from form.
             name = request.getParameter("name");
             email = request.getParameter("email"); 
             cc_type = request.getParameter("cc_type");
@@ -113,15 +112,16 @@ public class Complete_Booking extends HttpServlet {
                     + "c_cardexp = '" + cc_exp + "' "
                     + "where c_email = '" + email + "';";
             
+            // if customer not new update existing info and return (job done).
             ResultSet r = statement.executeQuery(check_if_new);
             while(r.next()){
                 statement.executeUpdate(update_cust);
                 return;
             }
             
-            // get the max customer number and add 1 for new customer number
+          
             r = statement.executeQuery("select max(c_no) from customer");
-            
+            // this creates the customer number; the largest c_no in database + 1.
             while(r.next()){
                 c_no = Integer.parseInt(r.getString(1)) + 1;   
             }
@@ -137,32 +137,13 @@ public class Complete_Booking extends HttpServlet {
                     + cc_number + "');";
             
             statement.execute(insert_cust);
-
-         
-  
     }
     
     
     // adds booking to database
-    private void add_booking_to_db(Statement statement, HttpServletRequest request) {
+    private void add_booking_to_db(Statement statement, HttpServletRequest request) throws SQLException {
         
-//        Cookie[] booking_details = request.getCookies();
-//        for (int i = 0; i < booking_details.length; i++) {
-//            String name = booking_details[i].getName();
-//            String value = booking_details[i].getValue();
-//            
-//            if("room".equals(name)){
-//                room = value;
-//            } else if("check_in".equals(name)){
-//                check_in = value;
-//            } else if("check_out".equals(name)){
-//                check_out = value;
-//            } else if("number".equals(name)){
-//                number_rooms = value;
-//            } else if("cost".equals(name)){
-//                cost = value;
-//            }
-//        }
+        // get info from session data
         HttpSession s = request.getSession();
         check_out = s.getAttribute("check_out").toString();
         check_in = s.getAttribute("check_in").toString();
@@ -170,22 +151,18 @@ public class Complete_Booking extends HttpServlet {
         cost = s.getAttribute("cost").toString();
         number_rooms = s.getAttribute("number").toString();
         
-        try {
-                ResultSet r = statement.executeQuery("select max(b_ref) from booking");
-               
-                while(r.next()){
-                    b_ref = Integer.parseInt(r.getString(1)) + 1;   
-            }
-            // the sql function 'create_booking' does most of the work here and creates both the booking and roombooking
-            statement.execute("SELECT create_booking(" + b_ref + ", " + c_no + ", '" +
-                room + "', '" + check_in + "', '" + check_out + "', " + number_rooms + ", " + cost + ");");
-        } catch (SQLException ex) {
-            Logger.getLogger(Complete_Booking.class.getName()).log(Level.SEVERE, null, ex);
-            // TODO error handling
+  
+        ResultSet r = statement.executeQuery("select max(b_ref) from booking");
+        // this creates the new booking reference: The largest b_ref on database + 1.
+        while (r.next()) {
+            b_ref = Integer.parseInt(r.getString(1)) + 1;
         }
+        // the sql function 'create_booking' does most of the work here and creates both the booking and roombooking
+        statement.execute("SELECT create_booking(" + b_ref + ", " + c_no + ", '"
+                + room + "', '" + check_in + "', '" + check_out + "', " + number_rooms + ", " + cost + ");");
     }
 
-   
+    // add info to session.
     private void createData(HttpServletRequest request) {
         HttpSession s = request.getSession();
         

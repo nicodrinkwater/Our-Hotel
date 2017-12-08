@@ -20,6 +20,8 @@
         <script>
             // get info from cookies (booking details
             function getinfo(){
+                
+                // gets the session data from jsp
                 var b_ref = "${b_ref}";
                 var check_in = "${check_in}";
                 var check_out = "${check_out}";
@@ -44,8 +46,8 @@
 						"<div class=\"item-info\"> <label>Checking date: </label> <span> " + check_in + " </span> </div>" +
 						"<div class=\"item-info\"> <label>Checkout date: </label> <span> " + check_out + " </span> </div>" +
 						"<div class=\"item-info\"> <input type=\"text\" name=\"notes\" value=\"" + notes + "\">Notes</div>" +
-                                                "<div class=\"item-info\"> <input type=\"numeric\" name=\"extras\">Food & Drink</div>" +
-                                                " <input type=\"text\" name=\"pay_amount\" placeholder=\"Amount\" value=\"0.0\">Pay<br>" +
+                                                "<div class=\"item-info\"> <input type=\"numeric\" min=\"0\" name=\"extras\">Food & Drink</div>" +
+                                                "<div class=\"item-info\"> <input type=\"numeric\" min=\"0\" name=\"pay_amount\" placeholder=\"Amount\" value=\"0.0\">Pay<br>" +
                                                 "</div>" +
                                                 "</p>"
                                      
@@ -53,7 +55,8 @@
             
             // checks amount to pay is correct. 
             function validate_form(){
-                
+                // TODO make sure payment less than bill. 
+                return true;
             }
          
         </script>
@@ -89,21 +92,23 @@
 			</div>
 			<div class="content-page">
 			<div class="container">
-                            <form action="Reception_update">
-                                <div id="booking_info">
-                                    <!-- the booking info will be shown here -->
-                                </div>
-                                     <!-- form to either take payment or update room status -->
-                                <input type="radio" name="status" value="check_in" >Check In
-                                <input type="radio" name="status" value="check_out" >Check Out<br>
-                               
-                                <button type="submit">Update</button>
-                            </form>
-                            <form action="reception-home.html">
-                                <br>
-                                <br>
-                                <button type="submit">Back</button>
-                            </form>
+                            <p align="center">
+                                <form action="Reception_update" onsubmit="return validate_form()">
+                                    <div id="booking_info">
+                                        <!-- the booking info will be shown here -->
+                                    </div>
+                                         <!-- form to either take payment or update room status -->
+                                    <input type="radio" name="status" value="check_in" >Check In
+                                    <input type="radio" name="status" value="check_out" >Check Out<br>
+
+                                    <button type="submit">Update</button>
+                                </form>
+                                <form action="reception-home.html">
+
+                                    <br>
+                                    <button type="submit">Back</button>
+                                </form>
+                            </p>
 			</div>
 			</div>
 			</div>

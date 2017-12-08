@@ -55,18 +55,18 @@ public class Housekeeping extends HttpServlet {
             /* Uncomment this to connect to uni database .*/
             Connection connection = DriverManager.getConnection(myDBurl, dbName, dbPassword);
             
-            // connect to database on my laptop
-            //Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost/postgres", "postgres", "fuck1234");
+          
            
             Statement statement = connection.createStatement();
             
             statement.execute("SET SEARCH_PATH TO hotelbooking;");
             
+            // gets a list of rooms that have status 'C' and turns this list into a string "rooms"
             get_rooms(request, response, statement);
-            //create_cookie(response, request);
+           
             connection.close();
             
-
+            // forwards to the next page (So housekeeeping can view list)
             RequestDispatcher rd = getServletContext().getRequestDispatcher("/Housekeeping-manage.jsp");
            
             rd.forward(request, response);
@@ -117,7 +117,7 @@ public class Housekeeping extends HttpServlet {
         return "Short description";
     }// </editor-fold>
 
-    // this gets the rooms that have status 'C' from room in hotelbooking database
+    // this gets the rooms that have status 'C' from room in hotelbooking database adds them to string "rooms" then adds "rooms" to session info.
     private void get_rooms(HttpServletRequest request, HttpServletResponse response, Statement statement) throws SQLException {
         statement.executeQuery("SELECT r_no FROM room WHERE r_status = 'C';");
         rooms = "";

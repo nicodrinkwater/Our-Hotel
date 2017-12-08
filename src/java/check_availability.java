@@ -169,8 +169,7 @@ public class check_availability extends HttpServlet {
         s.setAttribute("check_out", check_out);
         s.setAttribute("cost", Float.toString(cost));
         s.setAttribute("number", Integer.toString(number));
-       
-       
+      
     }
 }
 

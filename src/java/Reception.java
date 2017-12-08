@@ -23,8 +23,7 @@ import javax.servlet.http.HttpSession;
 // this servlet is for reception to get customer details then go to pager where they can either take payment or update room status.
 public class Reception extends HttpServlet {
     
-    //this is the next page that will be called if no errors.
-    String next_page = "reception-manage.html";
+   
     //this is the page that will called if error
     String error_page = "error.html";
     
@@ -57,20 +56,22 @@ public class Reception extends HttpServlet {
             /* Uncomment this to connect to uni database .*/
             Connection connection = DriverManager.getConnection(myDBurl, dbName, dbPassword);
             
-            // connect to database on my laptop
-            //Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost/postgres", "postgres", "fuck1234");
+         
            
             Statement statement = connection.createStatement();
             
             statement.execute("SET SEARCH_PATH TO hotelbooking;");
             
+            // gets the details of booking, customer from database.
             getDetails(request, response, statement);
            
+            // adds data to session.
             createData(request);
+            
             connection.close();
             
+            // forward to next page.
             RequestDispatcher rd = getServletContext().getRequestDispatcher("/reception-manage.jsp");
-           
             rd.forward(request, response);
             
         } catch (Exception e) {
@@ -221,6 +222,7 @@ public class Reception extends HttpServlet {
         }
     }
     
+    // adds data to session
     private void createData(HttpServletRequest request){
         HttpSession s = request.getSession();
         s.setAttribute("b_ref", b_ref);
