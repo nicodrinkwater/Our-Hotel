@@ -39,12 +39,14 @@
                                                 "<h3>Booking details</h3><br>" +
                                                 "<div class=\"item-info\"> <label>Booking Reference:</label> <span> " + b_ref + " </span> </div>" +
                                                 "<div class=\"item-info\"> <label>Customer Name </label> <span> " + c_name + " </span> </div>" +
-                                                "<div class=\"item-info\"> <label>Total Cost</label> <span> £" + total_cost + " </span> </div>" +
+                                                "<div class=\"item-info\"> <label>Booking Cost</label> <span> £" + total_cost + " </span> </div>" +
                                                 "<div class=\"item-info\"> <label>Balance Outstanding</label> <span> £" + balance + " </span> </div>" +
 						"<div class=\"item-info\"> <label>Checking date: </label> <span> " + check_in + " </span> </div>" +
 						"<div class=\"item-info\"> <label>Checkout date: </label> <span> " + check_out + " </span> </div>" +
-						"<div class=\"item-info\"> <input type=\"text\" value=\"" + notes + "\">Notes</div>" +
-                                                "</div>"+
+						"<div class=\"item-info\"> <input type=\"text\" name=\"notes\" value=\"" + notes + "\">Notes</div>" +
+                                                "<div class=\"item-info\"> <input type=\"numeric\" name=\"extras\">Food & Drink</div>" +
+                                                " <input type=\"text\" name=\"pay_amount\" placeholder=\"Amount\" value=\"0.0\">Pay<br>" +
+                                                "</div>" +
                                                 "</p>"
                                      
             }
@@ -94,10 +96,14 @@
                                      <!-- form to either take payment or update room status -->
                                 <input type="radio" name="status" value="check_in" >Check In
                                 <input type="radio" name="status" value="check_out" >Check Out<br>
-                                <input type="text" name="pay_amount" placeholder="Amount">Pay<br>
+                               
                                 <button type="submit">Update</button>
                             </form>
-                            
+                            <form action="reception-home.html">
+                                <br>
+                                <br>
+                                <button type="submit">Back</button>
+                            </form>
 			</div>
 			</div>
 			</div>

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import javax.servlet.RequestDispatcher;
@@ -12,6 +13,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -21,7 +23,7 @@ import javax.servlet.http.HttpServletResponse;
 // this is so that database updated after reception checks customers in and out and take payments
 public class Reception_update extends HttpServlet {
     
-    String b_ref;
+    String b_ref, notes, balance;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -57,12 +59,13 @@ public class Reception_update extends HttpServlet {
             
             // get b_ref from cookies.
             get_info(request);
-            
+            add_new_info(request, statement);
             update_rooms(statement, request);
             update_payment(statement, request);
+            update_page(request, statement);
             
             connection.close();
-            RequestDispatcher rd = getServletContext().getRequestDispatcher("/reception-home.html");
+            RequestDispatcher rd = getServletContext().getRequestDispatcher("/reception-manage.jsp");
            
             rd.forward(request, response);
             
@@ -116,9 +119,15 @@ public class Reception_update extends HttpServlet {
         String status = request.getParameter("status");
         if(status != null){
             if(status.equals("check_in")){
-                statement.executeUpdate("SELECT update_status(" + b_ref + ", 'X');");
+                statement.executeUpdate(
+                    "UPDATE room " +
+                    "SET r_status = 'X' " +
+                    "WHERE r_no = (SELECT r_no FROM roombooking WHERE b_ref = " + b_ref + ");");
             } else if(status.equals("check_out")){
-                statement.executeUpdate("SELECT update_status(" + b_ref + ", 'C');");
+                statement.executeUpdate(
+                    "UPDATE room " +
+                    "SET r_status = 'C' " +
+                    "WHERE r_no = (SELECT r_no FROM roombooking WHERE b_ref = " + b_ref + ");");
             }  
         }
     }
@@ -138,6 +147,38 @@ public class Reception_update extends HttpServlet {
 
     private void get_info(HttpServletRequest request) {
         b_ref = request.getSession().getAttribute("b_ref").toString();
+    }
+
+    private void add_new_info(HttpServletRequest request, Statement statement) throws SQLException {
+        notes = request.getParameter("notes");
+        String extras = request.getParameter("extras");
+        
+        
+        if(extras == null || extras == ""){
+            // do nothing
+        } else {
+            float extra = Float.parseFloat(extras);
+            statement.executeUpdate("UPDATE booking SET b_outstanding = b_outstanding + " + extra + " WHERE b_ref = " + b_ref + ";");
+           
+        }
+        
+        if(notes != null){
+            statement.executeUpdate("UPDATE booking SET b_notes = '" + notes + "' WHERE b_ref = " + b_ref + ";");
+        }
+          
+       
+    }
+    
+    private void update_page(HttpServletRequest request, Statement statement) throws SQLException {
+        statement.executeQuery("SELECT b_outstanding FROM booking WHERE b_ref = " + b_ref + ";");
+        ResultSet r = statement.getResultSet();
+        while(r.next()){
+            balance = r.getString(1);
+        }
+        HttpSession s = request.getSession();
+       
+        s.setAttribute("balance", balance);
+        s.setAttribute("notes", notes);
     }
 
 }
