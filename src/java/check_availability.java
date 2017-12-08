@@ -21,20 +21,12 @@ import javax.servlet.http.HttpSession;
  *
  * @author nicod
  * This servlet checks if rooms are available for the dates requested 
- * From the form on the hotel homepage
+ * From the form on the hotel homepage goes to the reservation.jsp where customer can make booking.
  */
 @WebServlet(urlPatterns = {"/check_availability"})
 public class check_availability extends HttpServlet {
 
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
+    
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, SQLException, ClassNotFoundException {
         response.setContentType("text/html;charset=UTF-8");
@@ -54,16 +46,14 @@ public class check_availability extends HttpServlet {
             /* Uncomment this to connect to uni database .*/
             Connection connection = DriverManager.getConnection(myDBurl, dbName, dbPassword);
 
-            // connect to database on my laptop
-            //Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost/postgres", "postgres", "fuck1234");
-
             Statement statement = connection.createStatement();
 
             statement.executeUpdate("SET SEARCH_PATH TO hotelbooking; ");
 
-            // set the attributes that hold checkin, checkout and room info
+            // update session wiht checkin, checkout and room info
             create_Data(request, response, statement);
             
+            // forward to the next page, reservation.jsp
             RequestDispatcher rd = getServletContext().getRequestDispatcher("/reservation.jsp");
             rd.forward(request, response);
             
@@ -129,6 +119,7 @@ public class check_availability extends HttpServlet {
     // create the cookies that hold checkin, checkout and room info
     private void create_Data(HttpServletRequest request, HttpServletResponse response, Statement statement) throws SQLException, IOException {
         
+        // get info from form.
         String room = request.getParameter("room");
         String check_in = request.getParameter("check_in");
         String check_out = request.getParameter("check_out");
@@ -169,8 +160,9 @@ public class check_availability extends HttpServlet {
             cost = (number * 75 * number_of_nights);
         } 
         
-        HttpSession s = request.getSession();
         
+        // add the data to the session
+        HttpSession s = request.getSession();
         s.setAttribute("room", room);
         s.setAttribute("nights", Integer.toString(number_of_nights));
         s.setAttribute("check_in", check_in);
