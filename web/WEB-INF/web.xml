@@ -16,6 +16,10 @@
         <servlet-name>Housekeeping</servlet-name>
         <servlet-class>Housekeeping</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>get_my_booking</servlet-name>
+        <servlet-class>get_my_booking</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>check_availability</servlet-name>
         <url-pattern>/check_availability</url-pattern>
@@ -39,6 +43,10 @@
     <servlet-mapping>
         <servlet-name>Housekeeping</servlet-name>
         <url-pattern>/Housekeeping</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>get_my_booking</servlet-name>
+        <url-pattern>/get_my_booking</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
