@@ -50,8 +50,6 @@
 						"<div class=\"item-info\"> <label>Total: </label> <span> £" + cost + " </span> </div>" +
                                                 "</div>"+
                                                 "</p>"
-                                     
-             
             }
             
             function check_form(){

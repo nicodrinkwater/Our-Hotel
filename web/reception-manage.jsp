@@ -31,7 +31,6 @@
                 var c_name = "${c_name}";
                 var notes = "${notes}";
                 
-               
                 // writes the html to show info on page
                 document.getElementById("booking_info").innerHTML = 
                                                 "<p align=\"center\">" + 
