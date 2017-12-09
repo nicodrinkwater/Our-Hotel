@@ -20,25 +20,25 @@
             
             today = new Date();
 
-        if ( check_in.getFullYear() >= 2019 ) {
-            alert("Year must be less than 2019!");
+        if ( check_in.getFullYear() > 2019 ) {
+            alert("We are only taking bookings up to 2019");
             return false;
         }
         
-        if (today > check_in) {
-            alert("Check in date must be from tomorrow !");
+        if (today >= check_in) {
+            alert("Check in date must be from today");
             return false;
         }
 
         if(check_in >= check_out){
-            alert("Check out date must greater than check in date !");
+            alert("Check out date must later than check in date");
                 return false;
             }
         
         if(check_out > check_in) {
             days = parseInt((check_out - check_in) / (1000 * 60 * 60 * 24)); 
             if (days > 14) {
-                alert("Can't book for more than 14 days !");
+                alert("If you would like to book for longer than 14 days please call 01603 444636");
                 return false;
             }
         }
@@ -82,7 +82,7 @@
 					<div class="carousel-caption">
 					  <h1>Heartache Hotel</h1>
 					  <p>Castle Hill, Norwich, NR1 3JU</p>
-					  <p>Book now : 0743 806 0000 </p>
+					  <p>Book now : 01603 444636 </p>
 					</div>
 				  </div>
 				</div>
