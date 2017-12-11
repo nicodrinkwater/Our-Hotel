@@ -26,9 +26,6 @@
                 var check_out = "${check_out}";
                 var cost = "${cost}";
                 var number = "${number}";
-
-
-
                 if ("std_d" === room) {
                     room = "Standard Double";
                 } else if ("std_t" === room) {
@@ -69,7 +66,7 @@
                 var ty = today.getFullYear();
                 var tm = today.getMonth() + 1;
                 if (!cname.match(nc)) {
-                    alert("Bad name");
+                    alert("Please input alphabet characters only ");
                     return false;
                 }
                 if (!cemail.match(mc)) {
@@ -122,7 +119,7 @@
                     </div>	
                 </div>
                 <!-- This is the form to take info for booking into database -->
-                <form action="Complete_Booking" method="post" onsubmit="return check_form()">
+                <form action="Complete_Booking" method="post" onsubmit="return check_form()" name="customerInfo">
                     <div class="content-page">
                         <div class="container">
 
