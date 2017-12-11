@@ -286,3 +286,22 @@ img, iframe {
   font-weight: 400; }
 .item-info span {
   font-weight: 700; }
+
+.booking-information .get-info {
+    text-align: center;
+    font-size: 16px; }
+.booking-information .get-user-info {
+    max-width: 991px;
+    margin: 0 auto;
+    font-size: 14px; }
+.get-info label {
+    text-align: left;
+    min-width: 130px;
+    margin-right: 10px;
+    font-weight: 400; }
+.get-info input {
+    width:20%;
+    font-weight: 400; }
+.g-sep {
+    font-weight: bold;
+}
