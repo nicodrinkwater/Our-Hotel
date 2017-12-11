@@ -1,6 +1,6 @@
 <%-- 
-    Document   : customer-manage
-    Created on : 09-Dec-2017, 13:16:33
+    Document   : cancelled
+    Created on : 11-Dec-2017, 11:13:57
     Author     : qsb17hdu
 --%>
 
@@ -20,48 +20,6 @@
     <link rel="stylesheet" href="css/style.css">
         <!-- this javascript gets the room, check in, check out info from cookie and writes it to page -->
         <script>
-            function get_info(){
-                var room = "${room}";
-                var check_in = "${check_in}";
-                var check_out = "${check_out}";
-                var cost = "${cost}";
-                var number = "${number}";
-                var b_ref = "${b_ref}";
-                var name = "${name}";
-                var address = "${address}";
-                var email = "${email}";
-                var notes = "${notes}";
-                var nights = "${nights}";
-                
-              
-                if("std_d" === room){
-                    room = "Standard Double";
-                } else if("std_t" === room){
-                    room = "Standard Twin";
-                } else if("sup_d" === room){
-                    room = "Superior Double";
-                } else if("sup_t" === room){
-                    room = "Superior Twin";
-                } 
-  
-                document.getElementById("room_info").innerHTML = 
-                                                "<p align=\"center\">" + 
-                                                "<div class=\"booking-info\">" +
-                                                "<h3>Your booking</h3><br>" +
-                                                "<div class=\"item-info\"> <label>Booking Reference:</label> <span> " + b_ref + " </span> </div>" +
-                                                "<div class=\"item-info\"> <label>Room Type: </label> <span> " + room + " </span> </div>" +
-                                                "<div class=\"item-info\"> <label>Number of Rooms: </label> <span>" + number + " </span> </div>" +
-                                                "<div class=\"item-info\"> <label>Number of Nights: </label> <span>" + nights + " </span> </div>" +
-						"<div class=\"item-info\"> <label>Checking date: </label> <span> " + check_in + " </span> </div>" +
-						"<div class=\"item-info\"> <label>Checkout date: </label> <span> " + check_out + " </span> </div>" +
-						"<div class=\"item-info\"> <label>Total: </label> <span> £" + cost + " </span> </div>" +
-                                                "<div class=\"item-info\"> <label>Name</label> <span> " + name + " </span> </div>" +
-                                                "<div class=\"item-info\"> <label>Address</label> <span> " + address + " </span> </div>" +
-                                                "<div class=\"item-info\"> <label>Email</label> <span> " + email + " </span> </div>" +
-                                                "<div class=\"item-info\"> <label>Notes</label> <span> " + notes + " </span> </div>" +
-                                                "</div>"+
-                                                "</p>"
-            }
             
         </script>
   </head>
@@ -78,11 +36,8 @@
 					 <nav class="gdlr-navigation sf-js-enabled sf-arrows" id="gdlr-main-navigation" role="navigation">
 						<ul id="menu-main-menu-1" class="sf-menu gdlr-main-menu">
 							 <li class="menu-item"><a href="index.html">Home</a></li> 
-							 <li class="menu-item active"><a href="booked.html">Booked!</a></li> 
-							 <li class="menu-item"><a href="room.html">Rooms</a></li> 
 							 <li class="menu-item"><a href="about-us.html">About us</a></li> 
 							 <li class="menu-item"><a href="contact-us.html">Contact us</a></li> 
-                                                         <input type="text" name="" placeholder="">
 						</ul>	
 					 </nav>	 
 				</div>
@@ -95,26 +50,29 @@
 					<h1 class="gdlr-page-title">Booking</h1>
 				</div>	
 			</div>
-                        <form action="Cancel" method="post">
+                        <!-- This is the form to take info for booking into database -->
+                        <form action="index.html" method="post">
 			<div class="content-page">
 			<div class="container">
 			
-                            <h3 class="gdlr-item-title">Your booking information</h3>			
-                            <div class="booking-information" >
-                                    <div id="room_info">
-
-                                    </div>
-
-                            </div>
+                           
+				<h3 class="gdlr-item-title">Your booking has been cancelled</h3>			
+				
+				<div class="booking-information" >
+					<div id="room_info">
+						
+					</div>
+					
+				</div>
                           
 			</div>
-			<h3 class="gdlr-item-title"></h3>
-                        <p><button type="submit">Cancel</button></p>
-			<p><button href="index.html">Home</button></p>
+			<h3 class="gdlr-item-title"></h3>			
+			<p align="center"><button name="book">Home</button></p>
 			</div>
                      
                         </form>
 		</div>
+		
 		<footer class="site-footer">
 			<div class="container">
 				<div class="col-sm-4 footer-section">
@@ -154,13 +112,15 @@
 	
 	<script>
 		jQuery(window).scroll(function(){                
+
 		if(jQuery(window).scrollTop() > 100){
 			var dataleft = ((jQuery('.site-header .top-header .top-container').width() - 100) / 2) - (jQuery('.site-header .top-header .sitetitle').width() / 2) - 15;	
 			jQuery('.site-header').addClass('top-header-fixed'); 
 		}       
 		else {
 			jQuery('.site-header').removeClass('top-header-fixed'); 
-		}	
+		}
+		
 	});
 	jQuery(document).ready(function($){ 
 		$('.buttonmenu-mobile').click(function(){
